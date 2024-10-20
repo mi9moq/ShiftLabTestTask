@@ -26,7 +26,7 @@
         android:layout_marginTop="24dp"
         android:textSize="24sp"
         android:textColor="@color/black"
-        android:text="No notes"
+        android:text="@string/no_notes"
         android:textAlignment="center"
         android:visibility="gone"/>
 

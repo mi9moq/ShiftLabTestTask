@@ -10,8 +10,7 @@ import dagger.Component
 @AppScope
 @Component(
     modules = [
-        DatabaseModule::class,
-        NoteModule::class,
+        DataModule::class,
         ViewModelModule::class,
         NavigationModule::class,
     ]

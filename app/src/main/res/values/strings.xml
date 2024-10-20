@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Note</string>
+    <string name="no_notes">Нет заметок</string>
+    <string name="description">описание</string>
+    <string name="save">Сохранить</string>
+    <string name="title">Заголовок</string>
 </resources>

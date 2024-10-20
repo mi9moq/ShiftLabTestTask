@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -48,6 +49,8 @@ class NoteFragment : Fragment() {
         ViewModelProvider(this, viewModelFactory)[NoteViewModel::class]
     }
 
+    private lateinit var backPressedCallback: OnBackPressedCallback
+
     override fun onAttach(context: Context) {
         component.inject(this)
         super.onAttach(context)
@@ -72,12 +75,17 @@ class NoteFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupClickListeners()
         addTextWatcher()
+        setupBackPressedCallback()
         observeViewModel()
     }
 
     private fun setupClickListeners() {
         binding.toolbar.setOnClickListener {
-            viewModel.back()
+            viewModel.back(
+                isEdit,
+                binding.title.text?.trim().toString(),
+                binding.description.text?.trim().toString()
+            )
         }
         if (isEdit)
             binding.save.setOnClickListener {
@@ -102,9 +110,23 @@ class NoteFragment : Fragment() {
         }
     }
 
+    private fun setupBackPressedCallback() {
+        backPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                viewModel.back(
+                    isEdit,
+                    binding.title.text?.trim().toString(),
+                    binding.description.text?.trim().toString()
+                )
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(backPressedCallback)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        backPressedCallback.remove()
     }
 
     private fun parseArgs() {
@@ -114,9 +136,10 @@ class NoteFragment : Fragment() {
     }
 
     private fun initScreen() {
-        if (isEdit) {
+        if (isEdit)
             viewModel.getNote(noteId)
-        }
+        else
+            viewModel.getDraft()
     }
 
     private fun observeViewModel() {

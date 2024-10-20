@@ -12,4 +12,10 @@ interface NoteRepository {
     suspend fun create(note: Note)
 
     suspend fun delete(id: Int)
+
+    fun getDraft(): Note
+
+    fun clearDraft()
+
+    fun saveDraft(title: String?, description: String)
 }
